@@ -1,9 +1,10 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware  # Import CORS middleware
-from app.database import engine  # Adjusted to import from the app folder
-from app.models import Base      # Importing Base from app.models
-from app.routes import router     # Importing router from app.routes
-import uvicorn                   # Import Uvicorn
+from fastapi.middleware.cors import CORSMiddleware
+from app.database import engine
+from app.models import Base
+from app.routes import router
+import uvicorn
+import os  # For accessing environment variables
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -13,8 +14,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Adjust this to your frontend's URL in production
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all HTTP methods
-    allow_headers=["*"],   # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Create tables
@@ -29,4 +30,6 @@ def read_root():
 
 # Run the server programmatically
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    # Retrieve the PORT from the environment or default to 8000 for local use
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
